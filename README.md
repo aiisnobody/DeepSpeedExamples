@@ -1,4 +1,4 @@
-# DeepSpeed Examples
+# DeepSpeed Examples 
 This repository contains various examples including training, inference, compression, benchmarks, and applications that use [DeepSpeed](https://github.com/deepspeedai/DeepSpeed).
 
 ## 1. Applications
