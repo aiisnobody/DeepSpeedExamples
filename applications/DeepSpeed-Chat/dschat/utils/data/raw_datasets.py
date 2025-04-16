@@ -770,3 +770,52 @@ class LmqgQagjaquadDataset(PromptRawDataset):
             f"Warning: dataset {self.dataset_name} does not include rejected response."
         )
         return None
+        
+class LocalDataV1(PromptRawDataset):
+
+    def __init__(self, output_path, seed, local_rank, dataset_name):
+        super().__init__(output_path, seed, local_rank, dataset_name)
+        self.dataset_name = "Local/DataV1"
+        self.dataset_name_clean = "Local_DataV1"
+        # 加载转换后的RLHF数据集
+        self.raw_datasets = load_dataset(
+            path="/root/.cache/huggingface/datasets/rlhf_reward_dataset",
+            data_files={"train": "dataset.json"}  # 假设您保存为dataset.json
+        )
+
+    def get_train_data(self):
+        from .data_utils import get_raw_dataset_split_index
+        dataset = self.raw_datasets["train"]
+        index = get_raw_dataset_split_index(
+            self.local_rank, self.output_path,
+            self.dataset_name_clean,
+            self.seed, "train_eval", "9,1", 0,
+            len(dataset))
+        dataset = Subset(dataset, index)
+        return dataset
+
+    def get_eval_data(self):
+        from .data_utils import get_raw_dataset_split_index
+        dataset = self.raw_datasets["train"]
+        index = get_raw_dataset_split_index(
+            self.local_rank, self.output_path,
+            self.dataset_name_clean,
+            self.seed, "train_eval", "9,1", 1,
+            len(dataset))
+        dataset = Subset(dataset, index)
+        return dataset
+
+    def get_prompt(self, sample):
+        return sample['prompt']  # 直接返回转换后的prompt字段
+
+    def get_chosen(self, sample):
+        return sample['chosen']  # 返回转换后的chosen字段
+
+    def get_rejected(self, sample):
+        return sample['rejected']  # 返回转换后的rejected字段
+    
+    def get_prompt_and_chosen(self, sample):
+        return f"{sample['prompt']}{sample['chosen']}"  # 拼接prompt和chosen
+
+    def get_prompt_and_rejected(self, sample):
+        return f"{sample['prompt']}{sample['rejected']}"  # 拼接prompt和rejected
