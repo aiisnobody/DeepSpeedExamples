@@ -32,6 +32,9 @@ def get_raw_dataset(dataset_name, output_path, seed, local_rank):
     elif "yitingxie/rlhf-reward-datasets" in dataset_name:
         return raw_datasets.YitingxieRlhfrewarddatasetsDataset(
             output_path, seed, local_rank, dataset_name)
+    elif "Local/DataV1" in dataset_name:
+        return raw_datasets.LocalDataV1(
+            output_path, seed, local_rank, dataset_name)
     elif "openai/webgpt_comparisons" in dataset_name:
         return raw_datasets.OpenaiWebgptcomparisonsDataset(
             output_path, seed, local_rank, dataset_name)
