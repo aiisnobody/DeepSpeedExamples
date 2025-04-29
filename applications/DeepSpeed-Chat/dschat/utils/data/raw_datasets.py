@@ -398,6 +398,42 @@ class LocalJsonFileDataset(PromptRawDataset):
         if sample['prompt'] is not None and sample['rejected'] is not None:
             return " " + sample['prompt'] + " " + sample['rejected']
         return None
+#####这一段预训练的时候再开启，把上一段屏蔽        
+#class LocalJsonFileDataset(PromptRawDataset):
+#    def __init__(self, output_path, seed, local_rank, dataset_name, chat_path):
+#        super().__init__(output_path, seed, local_rank, dataset_name)
+#        self.dataset_name = "local/jsonfile"
+#        self.dataset_name_clean = "jsonfile"
+#        self.raw_datasets = load_dataset('jsonl',
+#                                         data_files={
+#                                             "train":
+#                                             chat_path + '/data/train.jsonl',
+#                                             "eval":
+#                                             chat_path + '/data/eval.jsonl'
+#                                         })
+#
+#    def get_train_data(self):
+#        if self.raw_datasets['train'] is not None:
+#            return self.raw_datasets['train']
+#        return None
+#
+#    def get_eval_data(self):
+#        if self.raw_datasets['eval'] is not None:
+#            return self.raw_datasets['eval']
+#        return None
+#
+#    def get_text_data(self, split='train'):
+
+#        if split == 'train':
+#            data = self.get_train_data()
+#        elif split == 'eval':
+#            data = self.get_eval_data()
+#        else:
+#            raise ValueError("split 必须是 'train' 或 'eval'")
+#
+#        if data:
+#            return [sample['text'] for sample in data]
+#        return []
 
 
 # Chinese dataset
